@@ -8,6 +8,7 @@ function FormLogin() {
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
+    const [succeed, setSucceed] = useState(false)
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
         setLoading(true)
@@ -27,14 +28,22 @@ function FormLogin() {
             }
     
             setMessage('Login bem-sucedido!');
+            setSucceed(true)
             setTimeout(() => {
                 navigate('/dashboard');
             }, 1000);
 
 
         } catch (error) {
-            console.error(error);
-            setMessage(error.response?.data?.error || 'Erro ao fazer login.');
+            console.error(error.status);
+            if (error.status == 401) {
+                setMessage('Credeniais inválidas')
+            } else {
+                setMessage(error.response?.data?.error || 'Erro ao conectar com servidor.');
+            }
+            
+            
+            setSucceed(false)
         } finally {
             setLoading(false);
         }
@@ -59,7 +68,7 @@ function FormLogin() {
                 handleSubmit()
             }}>
                 <p className="form-title">Sign in to your account</p>
-                {message && <p className="response-message">{message}</p>}
+                {message && succeed == false ? <p className="response-message" style={{color: 'red'}}>{message}</p> : <p style={{color: 'green'}}className="response-message">{message}</p> }
                 <div className="input-container">
                     <input placeholder="Enter email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
                     <span>
@@ -90,13 +99,19 @@ function FormLogin() {
 }
 
 const StyledWrapper = styled.div`
+    .response-message{
+        padding: 2px
+
+    }
+
   .form {
     background-color: #fff;
     display: block;
-    padding: 2.5rem; /* Increased padding inside the card for a more spacious feel */
+    padding: 3rem; 
     width: 100%;
-    max-width: 550px; /* Controls the overall width of the card */
+    max-width: 650px; 
     border-radius: 0.75rem;
+    box-sizing: border-box;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
@@ -130,7 +145,7 @@ const StyledWrapper = styled.div`
       to fill the parent card's width!
     */
     width: 100%; 
-    box-sizing: border-box; /* Prevents padding from breaking the 100% width */
+    box-sizing: border-box; 
     
     border-radius: 0.5rem;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -184,5 +199,6 @@ const StyledWrapper = styled.div`
     font-weight: 500;
     color: #4F46E5;
   }
+
 `;
 export default FormLogin;

@@ -1,15 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; 
+import api from '../../services/api.js'
 function FormRegister() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('')
+    const [name, setName] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [message, setMessage] = useState('')
+    const [succeed, setSucceed] = useState(false)
+    const navigate = useNavigate();
+
+    const HandleSubmit = async (e) => {
+        setLoading(true)
+        setMessage('')
+        try {
+            const response = await api.post('/auth/register', { name, email, password })
+            console.log(response)
+            const data = response.data.data
+            setMessage('Cadastro realizado');
+            setSucceed(true)
+            setTimeout(() => {
+                navigate('/login');
+            }, 1000);
+
+
+
+        } catch (error) {
+            if (error.status == 400) {
+                setMessage('Email já registrado')
+            } else {
+console.error(error);
+            setMessage(error.response?.data?.error || 'Erro ao comunicar com banco de dados.');
+            }
+            
+            setSucceed(false)
+        } finally {
+            setLoading(false);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <StyledWrapper>
-      <form className="form" onSubmit={(e) => e.preventDefault()}>
-        <p className="form-title">Create your account</p>
+          <form className="form" onSubmit={(e) => {
+              
+          
+              e.preventDefault()
+              HandleSubmit()
+          }
+
+          
+          }>
+              <p className="form-title">Create your account</p>
+              {message && succeed == false ? <p className="response-message" style={{color: 'red'}}>{message}</p> : <p style={{color: 'green'}}className="response-message">{message}</p> }
         
-        {/* NAME INPUT */}
         <div className="input-container">
-          <input placeholder="Enter your name" type="text" />
+          <input placeholder="Enter your name" type="text" required value={name} onChange={(e) =>setName(e.target.value)} />
           <span>
             <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
@@ -17,9 +78,9 @@ function FormRegister() {
           </span>
         </div>
 
-        {/* EMAIL INPUT */}
+    
         <div className="input-container">
-          <input placeholder="Enter email" type="email" />
+          <input placeholder="Enter email" type="email" required value={email} onChange={(e) =>setEmail(e.target.value)} />
           <span>
             <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
@@ -27,9 +88,8 @@ function FormRegister() {
           </span>
         </div>
 
-        {/* PASSWORD INPUT */}
         <div className="input-container">
-          <input placeholder="Enter password" type="password" />
+          <input placeholder="Enter password" type="password" required value={password} onChange={(e) =>setPassword(e.target.value)} />
           <span>
             <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
@@ -52,13 +112,18 @@ function FormRegister() {
 }
 
 const StyledWrapper = styled.div`
+.response-message{
+        padding: 2px
+
+    }
   .form {
     background-color: #fff;
     display: block;
-    padding: 2.5rem;
+    padding: 3rem;
     width: 100%;
     max-width: 550px;
     border-radius: 0.75rem;
+    box-sizing: border-box;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
