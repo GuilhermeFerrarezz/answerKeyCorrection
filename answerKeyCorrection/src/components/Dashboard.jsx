@@ -2,9 +2,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import '../style/Dashboard.css'
 import api from '../../services/api.js'
+import Header from './Header.jsx'
 
 function Dashboard() {
-   const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);
     useEffect(() => {
         const savedUser = localStorage.getItem('user')
         if (savedUser) {
@@ -19,27 +20,15 @@ function Dashboard() {
     }
 
     return (
-
-       
-
-        <div className="app-container">
-            <h1>Dados Usuário</h1>
-            {user ? (
-                <div>
-                <p>Nome: { user.name || "Não informado"}</p>
-
-                <p>Email: {user.email || "Não informado"}</p>
-                <button onClick={handlePrivate}>Teste Private Routes</button>
-
-                
-                    </div>
-                
-            ) : 
-            (<p>Carregando dados do usuário</p>)
-            }
-            
-                
+        <div className="dashboard-container">
+            <Header></Header>
+            <div className="dashboard-content">
+                <h1>Dashboard</h1>
+                <button className="btn-primary" onClick={handlePrivate}>Teste Private Routes</button>
             </div>
+        </div>
+
+
 
     )
 }

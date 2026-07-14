@@ -15,12 +15,12 @@ function App() {
         <BrowserRouter>
 
         <div className="app-container">
-                <h1>SISTEMA DE CORREÇÃO DE PROVAS</h1>
+                
                 
                 <Routes>
                     <Route path='/' element={<Navigate to="/login"/>}/>
-                    <Route path='/login' element={<FormLogin />} />
-                    <Route path='/register' element={<FormRegister />} />
+                    <Route path='/login' element={<><h1 className='Titulo'>SISTEMA DE CORREÇÃO DE PROVAS</h1> <FormLogin /></>} />
+                    <Route path='/register' element={<><h1 className='Titulo'>SISTEMA DE CORREÇÃO DE PROVAS</h1><FormRegister /></>} />
                     <Route path='/dashboard' element={<Dashboard />} />
             </Routes>
             </div>

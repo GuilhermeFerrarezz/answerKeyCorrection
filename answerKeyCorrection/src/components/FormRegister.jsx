@@ -55,8 +55,9 @@ console.error(error);
 
 
 
-  return (
-    <StyledWrapper>
+    return (
+      
+        <StyledWrapper>
           <form className="form" onSubmit={(e) => {
               
           
@@ -112,9 +113,9 @@ console.error(error);
 }
 
 const StyledWrapper = styled.div`
+
 .response-message{
         padding: 2px
-
     }
   .form {
     background-color: #fff;
